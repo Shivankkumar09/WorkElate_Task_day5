@@ -2,8 +2,8 @@ import { createSlice, nanoid } from '@reduxjs/toolkit';
 
 const initialState = {
   columns: [
-    { id: nanoid(), name: 'Name' },
-    { id: nanoid(), name: 'Age' },
+    { id: nanoid(), name: "Column_1", type: "text", options: [] },
+    { id: nanoid(), name: "Column_2", type: "text", options: [] },
   ],
   rows: [
     { id: nanoid(), cells: {} },
@@ -42,13 +42,39 @@ const tableSlice = createSlice({
 },
 setRowsOrder: (state, action) => {
   state.rows = action.payload;
-}
+},
+changeColumnType: (state, action) => {
+  const { id, newType, options = [] } = action.payload;
+  const column = state.columns.find(col => col.id === id);
+  if (column) {
+    column.type = newType;
+    column.options = options;
+  }
+},
+updateColumnType: (state, action) => {
+    const { columnId, type } = action.payload;
+    const column = state.columns.find(col => col.id === columnId);
+    if (column) {
+      column.type = type;
+      if (type !== 'select') {
+        column.options = []; // clear options for non-select types
+      }
+    }
+  },
+  updateColumnOptions: (state, action) => {
+    const { columnId, options } = action.payload;
+    const column = state.columns.find(col => col.id === columnId);
+    if (column) {
+      column.options = options;
+    }
+  },
   }
 });
 
 export const {
   addColumn, deleteColumn, renameColumn,
-  addRow, deleteRow, updateCell, setColumnsOrder, setRowsOrder
+  addRow, deleteRow, updateCell, setColumnsOrder, setRowsOrder, changeColumnType,
+  updateColumnType, updateColumnOptions
 } = tableSlice.actions;
 
 export default tableSlice.reducer;

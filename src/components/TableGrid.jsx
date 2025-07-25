@@ -15,6 +15,7 @@ import {
   updateCell,
   setRowsOrder,
   setColumnsOrder,
+    changeColumnType,
 } from "../store/TableSlice";
 
 import SortableRow from "./SortableRow";
@@ -81,10 +82,13 @@ const TableGrid = () => {
                 {columns.map((col) => (
                   <SortableColumnHeader
                     key={col.id}
-                    column={col}
-                    onRename={(val) => dispatch(renameColumn({ id: col.id, name: val }))}
-                    onDelete={() => dispatch(deleteColumn(col.id))}
-                  />
+                     column={col}
+                      onRename={(val) => dispatch(renameColumn({ id: col.id, name: val }))}
+                      onDelete={() => dispatch(deleteColumn(col.id))}
+                      onTypeChange={(newType, options) =>
+                                  dispatch(changeColumnType({ id: col.id, newType, options }))
+                                } 
+                    />
                 ))}
               </tr>
             </thead>

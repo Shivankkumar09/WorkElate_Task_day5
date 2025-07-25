@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CellRenderer = ({ type, value, options, onChange }) => {
+const CellRenderer = ({ type = "text", value, options = [], onChange }) => {
   const [localValue, setLocalValue] = useState(value || "");
 
   const handleBlur = () => {
@@ -11,7 +11,7 @@ const CellRenderer = ({ type, value, options, onChange }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      e.target.blur(); // triggers onBlur
+      e.target.blur(); // Commit on Enter
     }
   };
 
@@ -22,7 +22,7 @@ const CellRenderer = ({ type, value, options, onChange }) => {
         value={localValue}
         onChange={(e) => {
           setLocalValue(e.target.value);
-          onChange(e.target.value); // immediate change for selects
+          onChange(e.target.value); // immediate update for dropdowns
         }}
       >
         {options.map((opt) => (
