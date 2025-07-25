@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import CellRenderer from './CellRender';
+import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 
 
@@ -33,7 +34,7 @@ const SortableRow = ({ row, columns, onCellChange, onDeleteRow }) => {
 
       
       <td className="border p-2 text-center">
-        <button onClick={onDeleteRow} className="text-red-500 text-sm">Delete_row</button>
+        <button onClick={onDeleteRow} className="text-red-500 text-xl cursor-pointer"><MdOutlineDeleteOutline  className="text-red-600 hover:underline " /></button>
       </td>
     </tr>
   );

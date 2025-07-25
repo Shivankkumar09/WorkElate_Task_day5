@@ -33,7 +33,7 @@ const SortableColumnHeader = ({ column, onRename, onDelete }) => {
         />
         <button
           onClick={onDelete}
-          className="text-red-600 hover:underline  ml-2"
+          className="text-red-600 hover:underline  ml-2 cursor-pointer"
         >
           <MdOutlineDeleteOutline  className="text-red-600 hover:underline ml-2" />
         </button>
