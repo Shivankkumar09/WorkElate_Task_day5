@@ -1,12 +1,16 @@
-# React + Vite
+## 🧩  Table Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a dynamic, Airtable-like table interface built with **React** and **@dnd-kit**. It supports:
 
-Currently, two official plugins are available:
+- 🪄 **Drag-and-Drop**: Reorder both rows and columns using intuitive drag handles.
+- ✍️ **Inline Editing**: Rename columns and edit cell data directly.
+- ➕ **Add/Delete Rows & Columns**: Perform full CRUD operations for rows and columns.
+- 🧠 **Custom Cell Types**: Includes support for text, select dropdowns, and more via a `CellRenderer`.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Tech Stack:
+- **React** + **Tailwind CSS**
+- **@dnd-kit/core** for drag-and-drop
+- **Redux Toolkit** (optional) for state management
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Status:
+✅ Task completed and changes pushed to GitHub.
