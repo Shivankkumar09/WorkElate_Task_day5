@@ -1,34 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const CellRenderer = ({ type = "text", value, options = [], onChange }) => {
+const CellRenderer = ({ type = "text", value, options = [], onChange, onExpand }) => {
   const [localValue, setLocalValue] = useState(value || "");
 
-  const handleBlur = () => {
-    if (localValue !== value) {
-      onChange(localValue);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      e.target.blur(); // Commit on Enter
-    }
-  };
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
 
   if (type === "select") {
     return (
       <select
-        className="w-full px-2 py-1 border rounded"
+        className="w-full border px-1"
         value={localValue}
         onChange={(e) => {
           setLocalValue(e.target.value);
-          onChange(e.target.value); // immediate update for dropdowns
+          onChange(e.target.value);
         }}
       >
         {options.map((opt) => (
-          <option key={opt} value={opt}>
-            {opt}
-          </option>
+          <option key={opt} value={opt}>{opt}</option>
         ))}
       </select>
     );
@@ -36,13 +26,11 @@ const CellRenderer = ({ type = "text", value, options = [], onChange }) => {
 
   return (
     <input
+      className="w-full border px-1"
       type="text"
-      className="w-full px-2 py-1 border rounded"
       value={localValue}
       onChange={(e) => setLocalValue(e.target.value)}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-      onContextMenu={(e) => e.stopPropagation()}
+      onBlur={() => onChange(localValue)}
     />
   );
 };

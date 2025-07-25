@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -15,16 +15,19 @@ import {
   updateCell,
   setRowsOrder,
   setColumnsOrder,
-    changeColumnType,
+  changeColumnType,
 } from "../store/TableSlice";
 
 import SortableRow from "./SortableRow";
-import SortableColumnHeader from "./SortableColumnHeader"; // <-- NEW component
+import SortableColumnHeader from "./SortableColumnHeader";
+import Modal from "./Modal";
 
 const TableGrid = () => {
   const dispatch = useDispatch();
   const columns = useSelector((state) => state.table.columns);
   const rows = useSelector((state) => state.table.rows);
+
+  const [editingRow, setEditingRow] = useState(null);
 
   const handleCellChange = (rowId, colId, value) => {
     dispatch(updateCell({ rowId, colId, value }));
@@ -56,6 +59,31 @@ const TableGrid = () => {
     dispatch(setColumnsOrder(updatedCols));
   };
 
+const handleSaveModal = (updatedFields) => {
+  if (!editingRow) return;
+
+  columns.forEach((col) => {
+    const newValue = updatedFields[col.id];
+    const prevValue = editingRow.cells[col.id];
+
+    if (newValue !== prevValue) {
+      console.log(`Updating row ${editingRow.id}, col ${col.id}: ${prevValue} => ${newValue}`);
+      dispatch(updateCell({ rowId: editingRow.id, colId: col.id, value: newValue }));
+    }
+  });
+
+  setEditingRow(null);
+};
+
+const getInitialDataForRow = (row) => {
+  const data = {};
+  for (const col of columns) {
+    data[col.id] = row.cells[col.id] || ""; 
+  }
+  return data;
+};
+
+
   return (
     <div className="p-4">
       <div className="flex gap-2 mb-3">
@@ -78,17 +106,17 @@ const TableGrid = () => {
           <SortableContext items={columns.map((col) => col.id)} strategy={horizontalListSortingStrategy}>
             <thead>
               <tr>
-                <th className="border p-2 bg-gray-100 w-8"></th> {/* drag handle column */}
+                <th className="border p-2 bg-gray-100 w-8"></th>
                 {columns.map((col) => (
                   <SortableColumnHeader
                     key={col.id}
-                     column={col}
-                      onRename={(val) => dispatch(renameColumn({ id: col.id, name: val }))}
-                      onDelete={() => dispatch(deleteColumn(col.id))}
-                      onTypeChange={(newType, options) =>
-                                  dispatch(changeColumnType({ id: col.id, newType, options }))
-                                } 
-                    />
+                    column={col}
+                    onRename={(val) => dispatch(renameColumn({ id: col.id, name: val }))}
+                    onDelete={() => dispatch(deleteColumn(col.id))}
+                    onTypeChange={(newType, options) =>
+                      dispatch(changeColumnType({ id: col.id, newType, options }))
+                    }
+                  />
                 ))}
               </tr>
             </thead>
@@ -105,12 +133,23 @@ const TableGrid = () => {
                   columns={columns}
                   onCellChange={handleCellChange}
                   onDeleteRow={() => dispatch(deleteRow(row.id))}
+                  onEditRow={() => setEditingRow(row)} // 👈 Hook into modal open
                 />
               ))}
             </tbody>
           </SortableContext>
         </DndContext>
       </table>
+
+      {editingRow && (
+  <Modal
+    initialData={getInitialDataForRow(editingRow)}
+    columns={columns} // ✅ REQUIRED
+    onClose={() => setEditingRow(null)}
+    onSave={handleSaveModal}
+  />
+)}
+
     </div>
   );
 };
